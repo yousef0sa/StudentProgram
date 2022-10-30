@@ -37,7 +37,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lbspeed = new System.Windows.Forms.Label();
-            this.lbUrl = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -71,9 +70,9 @@
             this.lab_processing.Location = new System.Drawing.Point(420, 16);
             this.lab_processing.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lab_processing.Name = "lab_processing";
-            this.lab_processing.Size = new System.Drawing.Size(47, 13);
+            this.lab_processing.Size = new System.Drawing.Size(31, 13);
             this.lab_processing.TabIndex = 2;
-            this.lab_processing.Text = "speed: ";
+            this.lab_processing.Text = "........";
             // 
             // but_stop
             // 
@@ -82,12 +81,13 @@
             this.but_stop.Name = "but_stop";
             this.but_stop.Size = new System.Drawing.Size(88, 42);
             this.but_stop.TabIndex = 3;
-            this.but_stop.Text = "&Stop";
+            this.but_stop.Text = "Pause";
             this.but_stop.UseVisualStyleBackColor = true;
             this.but_stop.Click += new System.EventHandler(this.but_stop_Click);
             // 
             // but_Install
             // 
+            this.but_Install.Enabled = false;
             this.but_Install.Location = new System.Drawing.Point(108, 3);
             this.but_Install.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.but_Install.Name = "but_Install";
@@ -95,6 +95,7 @@
             this.but_Install.TabIndex = 4;
             this.but_Install.Text = "Install";
             this.but_Install.UseVisualStyleBackColor = true;
+            this.but_Install.Click += new System.EventHandler(this.but_Install_Click);
             // 
             // panel1
             // 
@@ -124,16 +125,6 @@
             this.lbspeed.TabIndex = 2;
             this.lbspeed.Text = "0.00 MB/s";
             // 
-            // lbUrl
-            // 
-            this.lbUrl.AutoSize = true;
-            this.lbUrl.Location = new System.Drawing.Point(76, 32);
-            this.lbUrl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbUrl.Name = "lbUrl";
-            this.lbUrl.Size = new System.Drawing.Size(26, 13);
-            this.lbUrl.TabIndex = 1;
-            this.lbUrl.Text = "Url:";
-            // 
             // DownloadList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -143,13 +134,13 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.lbspeed);
             this.Controls.Add(this.lab_processing);
-            this.Controls.Add(this.lbUrl);
             this.Controls.Add(this.lab_Program_name);
             this.Controls.Add(this.pictureBox1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "DownloadList";
             this.Size = new System.Drawing.Size(814, 47);
+            this.Load += new System.EventHandler(this.DownloadList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -167,6 +158,5 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lbspeed;
-        private System.Windows.Forms.Label lbUrl;
     }
 }

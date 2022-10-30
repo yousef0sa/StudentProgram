@@ -1,4 +1,5 @@
 ﻿using AltoHttp;
+using StudentProgramCsharp.Class;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,10 +20,17 @@ namespace StudentProgramCsharp.user_control
         public DownloadList()
         {
             InitializeComponent();
-            start_Download();
 
         }
 
+
+        private void DownloadList_Load(object sender, EventArgs e)
+        {
+
+            start_Download();
+        }
+
+        //Fun when Progress is Changed
         private void HttpDownloader_ProgressChanged(object sender, AltoHttp.ProgressChangedEventArgs e)
         {
             progressBar1.Value = (int)e.Progress;
@@ -30,17 +38,22 @@ namespace StudentProgramCsharp.user_control
 
         }
 
+
+        //Fun for if Download is Completed
         private void HttpDownloader_DownloadCompleted(object sender, EventArgs e)
         {
             this.Invoke((MethodInvoker)delegate
             {
                 lab_processing.Text = "Download Completed";
                 but_stop.Enabled = false;
+                but_Install.Enabled = true;
+                lbspeed.Text = "0.00 MB/s";
 
             });
         }
 
 
+        //get set
         #region Properties
         private Image _icone;
         private string _name;
@@ -89,44 +102,52 @@ namespace StudentProgramCsharp.user_control
         public string Url
         {
             get { return _url; }
-            set { _url = value;
-                lbUrl.Text = _url;
-            }
+            set { _url = value;}
         }
 
 
         #endregion
+
+
+        //Fun for download fill from URL
         private void start_Download()
         {
+            try
+            {
+                httpDownloader = new HttpDownloader(Url, $"{"C:\\Download"}\\{Path.GetFileName(Url)}");
+                httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
+                httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
+                httpDownloader.Start();
+                lab_processing.Text = "Downloading....";
+            }
+            catch
+            {
+                lab_processing.Text = "Try Later....";
 
-            String url_2 = Properties.Settings.Default.SettingUrl.ToString();
-            String url_3 = "https://download-cdn.jetbrains.com/python/pycharm-community-2022.2.3.exe";
-            httpDownloader = new HttpDownloader(url_2, $"{"C:\\Download"}\\{Path.GetFileName(url_2)}");
-            httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
-            httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
-            httpDownloader.Start();
-            lab_processing.Text = "Downloading....";
-
+            }
 
         }
-     
 
 
-        
 
+
+        //Button for Pause or Resume the Download
         private void but_stop_Click(object sender, EventArgs e)
         {
+            //if Paused Resume
             if (httpDownloader.State == AltoHttp.Status.Paused)
             {
-                but_stop.Text = "&Pause";
+                but_stop.Text = "Pause";
                 lab_processing.Text = "Downloading....";
                 httpDownloader.Resume();
 
             }
-            if (httpDownloader.State != AltoHttp.Status.Paused)
+
+            //if Resume Paused
+            else if (httpDownloader.State != AltoHttp.Status.Paused)
             {
                 lbspeed.Text = "0.00 MB/s";
-                but_stop.Text = "&Start";
+                but_stop.Text = "Resume";
                 lab_processing.Text = "Paused...";
                 httpDownloader.Pause();
                 
@@ -137,5 +158,14 @@ namespace StudentProgramCsharp.user_control
                 
         }
 
+        //Button for installing the application
+        private void but_Install_Click(object sender, EventArgs e)
+        {
+            
+            RunCMD install = new RunCMD();
+            install.cmd(@"C:\Download\" + Path.GetFileName(Url));
+
+
+        }
     }
 }

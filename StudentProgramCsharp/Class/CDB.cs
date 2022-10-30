@@ -16,8 +16,9 @@ namespace StudentProgramCsharp.Database
 
         public CDB() 
         { 
-        
-            con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""C:\Users\yosef\Documents\Visual Studio 2022\StudentProgramCsharp\StudentProgramCsharp\Database\Database1.mdf"";Integrated Security=True");
+            //con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database\Database.mdf ;Integrated Security=True");
+            con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + Application.StartupPath + @"\Database\Database2.mdf;Integrated Security=True");
+           
         }
 
 
@@ -104,8 +105,7 @@ namespace StudentProgramCsharp.Database
         }
         public SqlConnection _con()
         {
-
-            return con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=""C:\Users\yosef\Documents\Visual Studio 2022\StudentProgramCsharp\StudentProgramCsharp\Database\Database1.mdf"";Integrated Security=True"); ;
+            return con ;
         }
             
     }

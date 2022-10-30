@@ -139,13 +139,14 @@
             // 
             // but_My_Library
             // 
+            this.but_My_Library.Enabled = false;
             this.but_My_Library.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.but_My_Library.Location = new System.Drawing.Point(4, 121);
             this.but_My_Library.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.but_My_Library.Name = "but_My_Library";
             this.but_My_Library.Size = new System.Drawing.Size(224, 112);
             this.but_My_Library.TabIndex = 0;
-            this.but_My_Library.Text = "My Library";
+            this.but_My_Library.Text = "*My Library";
             this.but_My_Library.UseVisualStyleBackColor = true;
             this.but_My_Library.Click += new System.EventHandler(this.but_My_Library_Click);
             // 

@@ -98,6 +98,7 @@ namespace StudentProgramCsharp
             //Count the number of rows in the table
             int x = readData.count_Row("ProgramsData" , " where CONVERT(VARCHAR,Status) not in ('New')"); 
 
+
             SqlCommand cmd;
             SqlDataReader dataReader;
             String sql = "";
@@ -112,13 +113,19 @@ namespace StudentProgramCsharp
             
             while (dataReader.Read())
             {
+
+                //this fix while bug!
+                if (x == number)
+                    break;
+
                 listItems[number] = new DownloadList();
+
                 listItems[number].ProgramName = dataReader["Name"].ToString();
+                listItems[number].Url = dataReader["Url"].ToString();
+
                 //listItems[number].Icone = dataReader["Image"].ToString();
+
                 
-                Properties.Settings.Default.SettingUrl = dataReader["Url"].ToString();
-                Properties.Settings.Default.Save();
-                listItems[number].Url = Properties.Settings.Default.SettingUrl.ToString();
 
 
                 if (Downloads_flowLayoutPanel.Controls.Count < 0)
@@ -155,14 +162,8 @@ namespace StudentProgramCsharp
         private void but_Downloads_Click(object sender, EventArgs e)
         {
 
-
-            Downloads_flowLayoutPanel.Refresh();
             Downloads_flowLayoutPanel.BringToFront();
-            
-
-
-
-
         }
+
     }
 }

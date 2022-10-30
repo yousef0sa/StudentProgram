@@ -28,6 +28,7 @@ namespace StudentProgramCsharp
 
         }
 
+        //get set
         #region Properties
         private Image _icone;
         private string _title;
@@ -53,7 +54,7 @@ namespace StudentProgramCsharp
                 if (lblTitle.Parent != null)
                 { //this if check may be removed if it's sure that Parent is not null
                     lblTitle.Left = (lblTitle.Parent.Width - lblTitle.Width) / 2;
-                    checkking();
+                    checking();
                 }
             }
         }
@@ -71,10 +72,9 @@ namespace StudentProgramCsharp
         #endregion
 
 
-        private void checkking ()
+        private void checking()
         {
             CDB readData = new CDB();
-            readData._con();
 
             SqlDataReader dataReader;
             String sql = "Select * From ProgramsData WHERE CONVERT(varchar,Name) = " + String.Format("'{0}'", _title);
@@ -84,17 +84,11 @@ namespace StudentProgramCsharp
             dataReader.Read();
 
 
-            if (dataReader["Status"].ToString() == "Listed")
-                button1.Enabled = false;
+            if (dataReader["Status"].ToString() == "New")
+                button1.Enabled = true;
+            else button1.Enabled = false;
 
             readData.close();
-
-
-
-
-
-
-
 
 
         }
@@ -102,7 +96,6 @@ namespace StudentProgramCsharp
         private void button1_Click(object sender, EventArgs e)
         {
             CDB readData = new CDB();
-            readData._con();
 
             //change Status in ProgramsData Table to Listed 
             string cmd = "UPDATE ProgramsData SET Status = 'Listed' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _title);
@@ -120,25 +113,37 @@ namespace StudentProgramCsharp
             dataReader = myCommand.ExecuteReader();
             DownloadList listItems = new DownloadList();
             dataReader.Read();
-
-
-            listItems.ProgramName = dataReader["Name"].ToString();
-            Properties.Settings.Default.SettingUrl = dataReader["Url"].ToString();
-            Properties.Settings.Default.Save();
-            listItems.Url = Properties.Settings.Default.SettingUrl.ToString();
-
-
-
-            if (Form1.Instance.Downloads_flowLayoutPanel.Controls.Count < 0)
+            if (dataReader["Status"].ToString() != "New")
             {
-                Form1.Instance.Downloads_flowLayoutPanel.Controls.Clear();
+                MessageBox.Show("Status = New");
+                readData.close();
             }
+
+
             else
-                Form1.Instance.Downloads_flowLayoutPanel.Controls.Add(listItems);
+            {
 
-            readData.close();
+                listItems.ProgramName = dataReader["Name"].ToString();
+                Properties.Settings.Default.SettingUrl = dataReader["Url"].ToString();
+                Properties.Settings.Default.Save();
+                listItems.Url = Properties.Settings.Default.SettingUrl.ToString();
 
-            button1.Enabled = false;
+
+
+                if (Form1.Instance.Downloads_flowLayoutPanel.Controls.Count < 0)
+                {
+                    Form1.Instance.Downloads_flowLayoutPanel.Controls.Clear();
+                }
+                else
+                    Form1.Instance.Downloads_flowLayoutPanel.Controls.Add(listItems);
+
+                readData.close();
+
+                button1.Enabled = false;
+
+            }
+
+            
 
 
         }

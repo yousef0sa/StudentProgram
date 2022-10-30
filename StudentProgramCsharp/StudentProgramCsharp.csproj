@@ -122,12 +122,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\Database1.mdf">
+    <Content Include="Database\Database2.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Database\Database1_log.ldf">
+    <Content Include="Database\Database2_log.ldf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>Database1.mdf</DependentUpon>
+      <DependentUpon>Database2.mdf</DependentUpon>
     </Content>
     <Content Include="Image\search.png" />
     <Content Include="Image\settings.png" />
