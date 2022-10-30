@@ -104,8 +104,7 @@ namespace StudentProgramCsharp.user_control
             httpDownloader = new HttpDownloader(url_2, $"{"C:\\Download"}\\{Path.GetFileName(url_2)}");
             httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
             httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
-            httpDownloader.Resume();
-                Start();
+            httpDownloader.Start();
             lab_processing.Text = "Downloading....";
 
 
