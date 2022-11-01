@@ -15,9 +15,17 @@ namespace StudentProgramCsharp.Database
         SqlConnection con = new SqlConnection();
 
         public CDB() 
-        { 
-            //con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database\Database.mdf ;Integrated Security=True");
-            con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + Application.StartupPath + @"\Database\Database2.mdf;Integrated Security=True");
+        {
+
+            //GET DATA FROM Debug FILL
+            con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database\Database2.mdf ;Integrated Security=True");
+
+            //GET DATA FROM Debug FILL
+            //con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" + Application.StartupPath + @"\Database\Database2.mdf;Integrated Security=True");
+
+            //GET DATA FROM program fill
+            //con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\yosef\source\repos\StudentProgramCsharp\StudentProgramCsharp\Database\Database2.mdf;Integrated Security=True");
+            
            
         }
 

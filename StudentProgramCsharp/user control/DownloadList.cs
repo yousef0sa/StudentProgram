@@ -1,9 +1,12 @@
 ﻿using AltoHttp;
+using Microsoft.Win32;
 using StudentProgramCsharp.Class;
+using StudentProgramCsharp.Database;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -26,10 +29,18 @@ namespace StudentProgramCsharp.user_control
 
         private void DownloadList_Load(object sender, EventArgs e)
         {
-
-            start_Download();
+            //check if the Status in the database is Completed if not start Download
+            if (!checkIfCompleted())
+                start_Download();
+            panelController = Form1.Instance.Downloads_flowLayoutPanel.Controls.Count - 1;
         }
 
+
+        //Fun to return path of user Download folder
+        string GetDownloadFolderPath()
+        {
+            return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
+        }
         //Fun when Progress is Changed
         private void HttpDownloader_ProgressChanged(object sender, AltoHttp.ProgressChangedEventArgs e)
         {
@@ -46,8 +57,23 @@ namespace StudentProgramCsharp.user_control
             {
                 lab_processing.Text = "Download Completed";
                 but_stop.Enabled = false;
+                but_Remove.Enabled = true ;
                 but_Install.Enabled = true;
+                but_Remove.BringToFront();
                 lbspeed.Text = "0.00 MB/s";
+
+
+
+
+                //change Status in ProgramsData Table to Complete
+                CDB readData = new CDB();
+                string cmd = "UPDATE ProgramsData SET Status = 'Complete' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
+                SqlCommand myCommand = new SqlCommand(cmd, readData._con());
+                readData.open();
+                myCommand.ExecuteNonQuery();
+                readData.close();
+
+
 
             });
         }
@@ -59,7 +85,9 @@ namespace StudentProgramCsharp.user_control
         private string _name;
         private string _procssing;
         private string _url;
+        private int _controller;
         HttpDownloader httpDownloader;
+
         
 
 
@@ -105,6 +133,14 @@ namespace StudentProgramCsharp.user_control
             set { _url = value;}
         }
 
+        [Category("Custom Props")]
+        public int panelController
+        {
+            get { return _controller; }
+
+            set { _controller = value; }
+        }
+
 
         #endregion
 
@@ -114,7 +150,8 @@ namespace StudentProgramCsharp.user_control
         {
             try
             {
-                httpDownloader = new HttpDownloader(Url, $"{"C:\\Download"}\\{Path.GetFileName(Url)}");
+                Directory.CreateDirectory(GetDownloadFolderPath() + @"\Studen Program");
+                httpDownloader = new HttpDownloader(Url, GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
                 httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
                 httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
                 httpDownloader.Start();
@@ -158,13 +195,64 @@ namespace StudentProgramCsharp.user_control
                 
         }
 
+        //Fun for checking if the Status in the database is Complete
+        private Boolean checkIfCompleted()
+        {
+            CDB readData = new CDB();
+
+
+            SqlDataReader dataReader;
+            String sql = "Select * From ProgramsData WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
+            SqlCommand myCommand = new SqlCommand(sql, readData._con());
+            readData.open();
+            dataReader = myCommand.ExecuteReader();
+            dataReader.Read();
+
+
+
+            //checking Status in database if == Complete or not
+            if (dataReader["Status"].ToString() == "Complete")
+            {
+                readData.close();
+                
+                lab_processing.Text = "Download Completed";
+                but_stop.Enabled = false;
+                but_Remove.Enabled = true;
+                but_Install.Enabled = true;
+                but_Remove.BringToFront();
+                lbspeed.Text = "0.00 MB/s";
+                progressBar1.Value = 100;
+                return true;
+            }
+            else
+            {
+                readData.close();
+                return false;
+            }
+
+        }
+
         //Button for installing the application
         private void but_Install_Click(object sender, EventArgs e)
         {
-            
             RunCMD install = new RunCMD();
-            install.cmd(@"C:\Download\" + Path.GetFileName(Url));
+            install.cmd(GetDownloadFolderPath()+@"\Studen^ Program\" + Path.GetFileName(Url));
+            
 
+        }
+
+
+        private void but_Remove_Click(object sender, EventArgs e)
+        {
+            Form1.Instance.Downloads_flowLayoutPanel.Controls.RemoveByKey(_name);
+
+            //change Status in ProgramsData Table to New
+            CDB readData = new CDB();
+            string cmd = "UPDATE ProgramsData SET Status = 'New' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
+            SqlCommand myCommand = new SqlCommand(cmd, readData._con());
+            readData.open();
+            myCommand.ExecuteNonQuery();
+            readData.close();
 
         }
     }

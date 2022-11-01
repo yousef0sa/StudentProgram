@@ -40,12 +40,18 @@ namespace StudentProgramCsharp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            //loade item in program page
             popuProgramItems();
-            popuDownloadItems();
-        }
-        
 
+            //loade item in Download page
+            popuDownloadItems();
+
+            //return computer name
+            label1.Text = Environment.MachineName;
+        }
+
+
+        //Fun for adding items to Program page
         private void popuProgramItems()
         {
             CDB readData = new CDB();
@@ -88,9 +94,9 @@ namespace StudentProgramCsharp
 
         }
 
-    
 
 
+        //Fun for adding items to Download page
         private void popuDownloadItems()
         {
             CDB readData = new CDB();
@@ -122,10 +128,11 @@ namespace StudentProgramCsharp
 
                 listItems[number].ProgramName = dataReader["Name"].ToString();
                 listItems[number].Url = dataReader["Url"].ToString();
-
                 //listItems[number].Icone = dataReader["Image"].ToString();
+                listItems[number].Name = dataReader["Name"].ToString();
 
-                
+
+
 
 
                 if (Downloads_flowLayoutPanel.Controls.Count < 0)
@@ -149,11 +156,19 @@ namespace StudentProgramCsharp
 
         private void but_Programs_Click(object sender, EventArgs e)
         {
+            //Get Program page
+            Programs_flowLayoutPanel.Controls.Clear();
+            popuProgramItems();
+
             Programs_flowLayoutPanel.BringToFront();
+
+            
+
         }
 
         private void but_My_Library_Click(object sender, EventArgs e)
         {
+            //Get Library page
             My_Library_flowLayoutPanel.BringToFront();
         }
 
@@ -161,7 +176,7 @@ namespace StudentProgramCsharp
 
         private void but_Downloads_Click(object sender, EventArgs e)
         {
-
+            //Get Download page
             Downloads_flowLayoutPanel.BringToFront();
         }
 

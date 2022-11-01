@@ -33,6 +33,7 @@ namespace StudentProgramCsharp
         private Image _icone;
         private string _title;
         private string _install;
+        
 
 
 
@@ -66,6 +67,8 @@ namespace StudentProgramCsharp
 
             set { _install = value; }
         }
+
+        
 
 
 
@@ -113,7 +116,11 @@ namespace StudentProgramCsharp
             dataReader = myCommand.ExecuteReader();
             DownloadList listItems = new DownloadList();
             dataReader.Read();
-            if (dataReader["Status"].ToString() != "New")
+
+
+
+            //checking Status in database if == New or not
+            if (dataReader["Status"].ToString() == "New")
             {
                 MessageBox.Show("Status = New");
                 readData.close();
@@ -122,11 +129,11 @@ namespace StudentProgramCsharp
 
             else
             {
-
+                listItems.Name = dataReader["Name"].ToString();
                 listItems.ProgramName = dataReader["Name"].ToString();
-                Properties.Settings.Default.SettingUrl = dataReader["Url"].ToString();
-                Properties.Settings.Default.Save();
-                listItems.Url = Properties.Settings.Default.SettingUrl.ToString();
+                listItems.Url = dataReader["Url"].ToString();
+                
+                
 
 
 

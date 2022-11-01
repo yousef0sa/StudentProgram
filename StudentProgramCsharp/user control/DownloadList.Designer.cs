@@ -37,6 +37,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lbspeed = new System.Windows.Forms.Label();
+            this.but_Remove = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -99,8 +100,9 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.but_stop);
             this.panel1.Controls.Add(this.but_Install);
+            this.panel1.Controls.Add(this.but_stop);
+            this.panel1.Controls.Add(this.but_Remove);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(614, 0);
             this.panel1.Name = "panel1";
@@ -124,6 +126,18 @@
             this.lbspeed.Size = new System.Drawing.Size(63, 13);
             this.lbspeed.TabIndex = 2;
             this.lbspeed.Text = "0.00 MB/s";
+            // 
+            // but_Remove
+            // 
+            this.but_Remove.Enabled = false;
+            this.but_Remove.Location = new System.Drawing.Point(12, 3);
+            this.but_Remove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.but_Remove.Name = "but_Remove";
+            this.but_Remove.Size = new System.Drawing.Size(88, 42);
+            this.but_Remove.TabIndex = 5;
+            this.but_Remove.Text = "Remove";
+            this.but_Remove.UseVisualStyleBackColor = true;
+            this.but_Remove.Click += new System.EventHandler(this.but_Remove_Click);
             // 
             // DownloadList
             // 
@@ -158,5 +172,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lbspeed;
+        private System.Windows.Forms.Button but_Remove;
     }
 }
