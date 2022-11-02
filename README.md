@@ -1,8 +1,7 @@
-
 # Student Programs
 
-**The idea of the project :**  It makes it easier for the student to access the programs he needs.
-Also, non-students can use its features, allowing to modify the list of programs and increase or delete them if they want.
+**The idea of the project:**  It makes it easier for the student to access the programs he needs.
+Also, non-students can use its features, allowing them to modify the list of programs and increase or delete them if they want.
 
 
 ## Demo
