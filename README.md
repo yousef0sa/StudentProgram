@@ -19,7 +19,7 @@ Download: [Here](https://github.com/yousef0sa/StudentProgramCsharp/releases)
 
 -Add filter bar.
 
--Add new labels on the main form to count how many items at each of pages.
+-Add new labels on the main form to count how many items at each page.
 
 -Add new data.
 
