@@ -35,9 +35,9 @@
             this.but_stop = new System.Windows.Forms.Button();
             this.but_Install = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.but_Remove = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lbspeed = new System.Windows.Forms.Label();
-            this.but_Remove = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -109,6 +109,18 @@
             this.panel1.Size = new System.Drawing.Size(200, 47);
             this.panel1.TabIndex = 5;
             // 
+            // but_Remove
+            // 
+            this.but_Remove.Enabled = false;
+            this.but_Remove.Location = new System.Drawing.Point(12, 3);
+            this.but_Remove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.but_Remove.Name = "but_Remove";
+            this.but_Remove.Size = new System.Drawing.Size(88, 42);
+            this.but_Remove.TabIndex = 5;
+            this.but_Remove.Text = "Remove";
+            this.but_Remove.UseVisualStyleBackColor = true;
+            this.but_Remove.Click += new System.EventHandler(this.but_Remove_Click);
+            // 
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(171, 17);
@@ -127,22 +139,11 @@
             this.lbspeed.TabIndex = 2;
             this.lbspeed.Text = "0.00 MB/s";
             // 
-            // but_Remove
-            // 
-            this.but_Remove.Enabled = false;
-            this.but_Remove.Location = new System.Drawing.Point(12, 3);
-            this.but_Remove.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.but_Remove.Name = "but_Remove";
-            this.but_Remove.Size = new System.Drawing.Size(88, 42);
-            this.but_Remove.TabIndex = 5;
-            this.but_Remove.Text = "Remove";
-            this.but_Remove.UseVisualStyleBackColor = true;
-            this.but_Remove.Click += new System.EventHandler(this.but_Remove_Click);
-            // 
             // DownloadList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.LightSteelBlue;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.panel1);

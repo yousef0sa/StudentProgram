@@ -24,7 +24,7 @@ namespace StudentProgramCsharp.Class
             cmd.StartInfo.UseShellExecute = false;
             cmd.Start();
 
-            cmd.StandardInput.WriteLine(strCmdText);
+            cmd.StandardInput.WriteLine("\""+ strCmdText +"\"");
             cmd.StandardInput.Flush();
             cmd.StandardInput.Close();
             cmd.WaitForExit();

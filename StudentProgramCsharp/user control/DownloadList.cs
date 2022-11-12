@@ -60,7 +60,7 @@ namespace StudentProgramCsharp.user_control
                 but_Remove.Enabled = true ;
                 but_Install.Enabled = true;
                 but_Remove.BringToFront();
-                lbspeed.Text = "0.00 MB/s";
+                lbspeed.Text = "";
 
 
 
@@ -220,7 +220,7 @@ namespace StudentProgramCsharp.user_control
                 but_Remove.Enabled = true;
                 but_Install.Enabled = true;
                 but_Remove.BringToFront();
-                lbspeed.Text = "0.00 MB/s";
+                lbspeed.Text = "";
                 progressBar1.Value = 100;
                 return true;
             }
@@ -236,7 +236,7 @@ namespace StudentProgramCsharp.user_control
         private void but_Install_Click(object sender, EventArgs e)
         {
             RunCMD install = new RunCMD();
-            install.cmd(GetDownloadFolderPath()+@"\Studen^ Program\" + Path.GetFileName(Url));
+            install.cmd(GetDownloadFolderPath()+@"\Studen Program\" + Path.GetFileName(Url));
             
 
         }

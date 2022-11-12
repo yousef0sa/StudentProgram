@@ -15,6 +15,7 @@ using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Microsoft.SqlServer.Server;
 using StudentProgramCsharp.user_control;
+using System.Security.Policy;
 
 namespace StudentProgramCsharp
 {
@@ -28,6 +29,10 @@ namespace StudentProgramCsharp
 
         }
 
+        private void ProgramPage_Load(object sender, EventArgs e)
+        {
+            checking();
+        }
         //get set
         #region Properties
         private Image _icone;
@@ -55,7 +60,7 @@ namespace StudentProgramCsharp
                 if (lblTitle.Parent != null)
                 { //this if check may be removed if it's sure that Parent is not null
                     lblTitle.Left = (lblTitle.Parent.Width - lblTitle.Width) / 2;
-                    checking();
+                    
                 }
             }
         }
@@ -68,13 +73,13 @@ namespace StudentProgramCsharp
             set { _install = value; }
         }
 
-        
+
 
 
 
         #endregion
 
-
+        //fun for checking data parameter 
         private void checking()
         {
             CDB readData = new CDB();
@@ -85,14 +90,18 @@ namespace StudentProgramCsharp
             readData.open();
             dataReader = myCommand.ExecuteReader();
             dataReader.Read();
-
-
-            if (dataReader["Status"].ToString() == "New")
-                button1.Enabled = true;
-            else button1.Enabled = false;
-
+            
+            if (dataReader["Url"].ToString() == "")
+            {
+                button1.Enabled = false;
+            }
+            else
+            {
+                if (dataReader["Status"].ToString() == "New")
+                    button1.Enabled = true;
+                else button1.Enabled = false;
+            }
             readData.close();
-
 
         }
 
@@ -116,44 +125,26 @@ namespace StudentProgramCsharp
             dataReader = myCommand.ExecuteReader();
             DownloadList listItems = new DownloadList();
             dataReader.Read();
+           
+            listItems.Name = dataReader["Name"].ToString();
+            listItems.ProgramName = dataReader["Name"].ToString();
+            listItems.Url = dataReader["Url"].ToString();
 
 
-
-            //checking Status in database if == New or not
-            if (dataReader["Status"].ToString() == "New")
+            if (Form1.Instance.Downloads_flowLayoutPanel.Controls.Count < 0)
             {
-                MessageBox.Show("Status = New");
-                readData.close();
+                Form1.Instance.Downloads_flowLayoutPanel.Controls.Clear();
             }
-
-
             else
-            {
-                listItems.Name = dataReader["Name"].ToString();
-                listItems.ProgramName = dataReader["Name"].ToString();
-                listItems.Url = dataReader["Url"].ToString();
-                
-                
+                Form1.Instance.Downloads_flowLayoutPanel.Controls.Add(listItems);
 
+            readData.close();
 
-
-                if (Form1.Instance.Downloads_flowLayoutPanel.Controls.Count < 0)
-                {
-                    Form1.Instance.Downloads_flowLayoutPanel.Controls.Clear();
-                }
-                else
-                    Form1.Instance.Downloads_flowLayoutPanel.Controls.Add(listItems);
-
-                readData.close();
-
-                button1.Enabled = false;
-
-            }
-
-            
+            button1.Enabled = false;
 
 
         }
 
+        
     }
 }
