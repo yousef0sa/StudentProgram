@@ -16,6 +16,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Microsoft.SqlServer.Server;
 using StudentProgramCsharp.user_control;
 using System.Security.Policy;
+using System.Diagnostics;
 
 namespace StudentProgramCsharp
 {
@@ -24,21 +25,25 @@ namespace StudentProgramCsharp
         public ProgramPage()
         {
             InitializeComponent();
-            
+
 
 
         }
 
         private void ProgramPage_Load(object sender, EventArgs e)
-        {
+        {   //checking data parameter 
             checking();
+
+            //resize label
+            resize();
         }
         //get set
         #region Properties
         private Image _icone;
         private string _title;
         private string _install;
-        
+        private string _browse;
+
 
 
 
@@ -57,11 +62,7 @@ namespace StudentProgramCsharp
             set
             {
                 _title = value; lblTitle.Text = value;
-                if (lblTitle.Parent != null)
-                { //this if check may be removed if it's sure that Parent is not null
-                    lblTitle.Left = (lblTitle.Parent.Width - lblTitle.Width) / 2;
-                    
-                }
+
             }
         }
 
@@ -73,13 +74,29 @@ namespace StudentProgramCsharp
             set { _install = value; }
         }
 
+        [Category("Custom Props")]
+        public string Browse
+        {
+            get { return _browse; }
+
+            set { _browse = value; }
+        }
+
 
 
 
 
         #endregion
 
-        //fun for checking data parameter 
+        //Fun for resize label
+        private void resize()
+        {
+            int x = (this.Width / 2) - (lblTitle.Width / 2);
+            lblTitle.Left = x;
+
+        }
+
+        //Fun for checking data parameter 
         private void checking()
         {
             CDB readData = new CDB();
@@ -90,7 +107,7 @@ namespace StudentProgramCsharp
             readData.open();
             dataReader = myCommand.ExecuteReader();
             dataReader.Read();
-            
+
             if (dataReader["Url"].ToString() == "")
             {
                 button1.Enabled = false;
@@ -105,6 +122,7 @@ namespace StudentProgramCsharp
 
         }
 
+        //Button to Download
         private void button1_Click(object sender, EventArgs e)
         {
             CDB readData = new CDB();
@@ -125,7 +143,7 @@ namespace StudentProgramCsharp
             dataReader = myCommand.ExecuteReader();
             DownloadList listItems = new DownloadList();
             dataReader.Read();
-           
+
             listItems.Name = dataReader["Name"].ToString();
             listItems.ProgramName = dataReader["Name"].ToString();
             listItems.Url = dataReader["Url"].ToString();
@@ -145,6 +163,16 @@ namespace StudentProgramCsharp
 
         }
 
-        
+        //Browse the program's website
+        private void lblTitle_Click(object sender, EventArgs e)
+        {
+            if (_browse != "")
+            {
+                Process.Start(_browse);
+            }
+
+
+        }
+
     }
 }

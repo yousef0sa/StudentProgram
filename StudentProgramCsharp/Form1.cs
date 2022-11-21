@@ -36,7 +36,7 @@ namespace StudentProgramCsharp
         }
 
         public Form1()
-        {
+        {   
             InitializeComponent();
             _obj = this;
         }
@@ -57,49 +57,54 @@ namespace StudentProgramCsharp
         //Fun for adding items to Program page
         private void popuProgramItems()
         {
-            CDB readData = new CDB();
-            int x = readData.count_Row("ProgramsData"); //Count the number of rows in the table
 
-            SqlCommand cmd;
-            SqlDataReader dataReader;
-            String sql = "";
-            int number = 0;
+            string sql = "Select * From ProgramsData";
 
-            sql = "Select * From ProgramsData";
-            cmd = new SqlCommand(sql, readData._con());
-            readData.open();
 
-            dataReader = cmd.ExecuteReader();
-            ProgramPage[] listItems = new ProgramPage[x];
-
-            while (dataReader.Read())
+            using (SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database\Database2.mdf ;Integrated Security=True"))
             {
-                listItems[number] = new ProgramPage();
-                listItems[number].Title = dataReader["Name"].ToString();
-                listItems[number].Install = dataReader["Url"].ToString();
-             
+                int number = 0;
+                CDB readData = new CDB();
 
+                int x = readData.count_Row("ProgramsData"); //Count the number of rows in the table
 
-                if (Programs_flowLayoutPanel.Controls.Count < 0)
+                SqlCommand command = new SqlCommand(sql, connection);
+                connection.Open();
+
+                SqlDataReader reader = command.ExecuteReader();
+                ProgramPage[] listItems = new ProgramPage[x];
+
+                // Call Read before accessing data.
+                while (reader.Read())
                 {
-                    Programs_flowLayoutPanel.Controls.Clear();
+                    listItems[number] = new ProgramPage();
+                    listItems[number].Title = reader["Name"].ToString();
+                    listItems[number].Install = reader["Url"].ToString();
+                    listItems[number].Browse = reader["Browse"].ToString();
+
+
+
+                    if (Programs_flowLayoutPanel.Controls.Count < 0)
+                    {
+                        Programs_flowLayoutPanel.Controls.Clear();
+                    }
+                    else
+                        Programs_flowLayoutPanel.Controls.Add(listItems[number]);
+
+                    number++;
+
                 }
-                else
-                    Programs_flowLayoutPanel.Controls.Add(listItems[number]);
 
-                number++;
+                // Call Close when done reading.
+                reader.Close();
 
-
+                //get number of programs
+                lab_numOFprograms.Text = "Programs: " + x.ToString() + " |";
             }
-            //get number of programs
-            lab_numOFprograms.Text = "Programs: " + x.ToString() + " |";
-
-            number = 0;
-            dataReader.Close();
-            readData.close();
-
+            
         }
-
+    
+            
         //Fun for showing items on programs page by select type from database
         private void showItemType(String Type)
         {
@@ -119,12 +124,14 @@ namespace StudentProgramCsharp
 
             dataReader = cmd.ExecuteReader();
             ProgramPage[] listItems = new ProgramPage[x];
-
+            
             while (dataReader.Read())
             {
                 listItems[number] = new ProgramPage();
                 listItems[number].Title = dataReader["Name"].ToString();
                 listItems[number].Install = dataReader["Url"].ToString();
+                listItems[number].Browse = dataReader["Browse"].ToString();
+
 
 
 
@@ -139,7 +146,7 @@ namespace StudentProgramCsharp
 
 
             }
-
+                       
 
 
             number = 0;
@@ -150,59 +157,59 @@ namespace StudentProgramCsharp
         //Fun for adding items to Download page
         private void popuDownloadItems()
         {
-            CDB readData = new CDB();
+            string sql = "Select * From ProgramsData where CONVERT(VARCHAR,Status) not in ('New')";
 
-            //Count the number of rows in the table
-            int x = readData.count_Row("ProgramsData" , " where CONVERT(VARCHAR,Status) not in ('New')"); 
-
-
-            SqlCommand cmd;
-            SqlDataReader dataReader;
-            String sql = "";
-            int number = 0;
-
-            sql = "Select * From ProgramsData where CONVERT(VARCHAR,Status) not in ('New')";
-            cmd = new SqlCommand(sql, readData._con());
-            readData.open();
-
-            dataReader = cmd.ExecuteReader();
-            DownloadList[] listItems = new DownloadList[x];
-            
-            while (dataReader.Read())
+            using (SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database\Database2.mdf ;Integrated Security=True"))
             {
+                int number = 0;
+                CDB readData = new CDB();
+                int x = readData.count_Row("ProgramsData", " where CONVERT(VARCHAR,Status) not in ('New')"); //Count the number of rows in the table
 
-                //this fix while bug!
-                if (x == number)
-                    break;
+                SqlCommand command = new SqlCommand(sql, connection);
+                connection.Open();
 
-                listItems[number] = new DownloadList();
+                SqlDataReader reader = command.ExecuteReader();
+                DownloadList[] listItems = new DownloadList[x];
 
-                listItems[number].ProgramName = dataReader["Name"].ToString();
-                listItems[number].Url = dataReader["Url"].ToString();
-                //listItems[number].Icone = dataReader["Image"].ToString();
-                listItems[number].Name = dataReader["Name"].ToString();
-
-
-
-
-
-                if (Downloads_flowLayoutPanel.Controls.Count < 0)
+                // Call Read before accessing data.
+                while (reader.Read())
                 {
-                    Downloads_flowLayoutPanel.Controls.Clear();
+                    //this fix while bug!
+                    if (x == number)
+                        break;
+
+                    listItems[number] = new DownloadList();
+                    listItems[number].Name = reader["Name"].ToString();
+
+                    listItems[number].ProgramName = reader["Name"].ToString();
+                    listItems[number].Url = reader["Url"].ToString();
+                    //listItems[number].Icone = reader["Image"].ToString();
+                    
+
+
+
+
+
+                    if (Downloads_flowLayoutPanel.Controls.Count < 0)
+                    {
+                        Downloads_flowLayoutPanel.Controls.Clear();
+                    }
+                    else
+                        Downloads_flowLayoutPanel.Controls.Add(listItems[number]);
+
+
+                    number++;
+
                 }
-                else
-                    Downloads_flowLayoutPanel.Controls.Add(listItems[number]);
-                
 
-                number++;
-
-
+                // Call Close when done reading.
+                reader.Close();
             }
-            number = 0;
-            dataReader.Close();
-            readData.close();
-
         }
+
+
+
+        
 
         //Get Program page
         private void but_Programs_Click(object sender, EventArgs e)
@@ -268,6 +275,7 @@ namespace StudentProgramCsharp
                     listItems[number] = new ProgramPage();
                     listItems[number].Title = dataReader["Name"].ToString();
                     listItems[number].Install = dataReader["Url"].ToString();
+                    listItems[number].Browse = dataReader["Browse"].ToString();
 
 
 
@@ -332,6 +340,8 @@ namespace StudentProgramCsharp
         //
         //address bar
         //
+
+        //Maximized
         private void button2_Click(object sender, EventArgs e)
         {
             
@@ -348,15 +358,19 @@ namespace StudentProgramCsharp
             }
                 
         }
-
-
+        //exit
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Environment.Exit(Environment.ExitCode);
-            Application.ExitThread();
+        
+            this.Close();
             Application.Exit();
-        }
+            Application.ExitThread();
+            Environment.Exit(0);
+            //Environment.Exit(Environment.ExitCode);
 
+
+        }
+        //Minimized
         private void button3_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
@@ -383,7 +397,7 @@ namespace StudentProgramCsharp
 
 
         //
-        //programs button [Display type of programs]
+        //programs filter bar [Display type of programs]
         //
 
         //show [All]

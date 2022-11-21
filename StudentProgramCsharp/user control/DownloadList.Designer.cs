@@ -38,6 +38,7 @@
             this.but_Remove = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lbspeed = new System.Windows.Forms.Label();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -139,6 +140,10 @@
             this.lbspeed.TabIndex = 2;
             this.lbspeed.Text = "0.00 MB/s";
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            // 
             // DownloadList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -174,5 +179,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lbspeed;
         private System.Windows.Forms.Button but_Remove;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

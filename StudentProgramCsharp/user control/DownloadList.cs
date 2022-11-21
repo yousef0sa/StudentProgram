@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -41,6 +42,27 @@ namespace StudentProgramCsharp.user_control
         {
             return Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders", "{374DE290-123F-4565-9164-39C4925E467B}", String.Empty).ToString();
         }
+
+        //Fun for download fill from URL
+        private void start_Download()
+        {
+            try
+            {
+                Directory.CreateDirectory(GetDownloadFolderPath() + @"\Studen Program");
+                httpDownloader = new HttpDownloader(Url, GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
+                httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
+                httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
+                httpDownloader.Start();
+                lab_processing.Text = "Downloading....";
+            }
+            catch
+            {
+                lab_processing.Text = "Try Later....";
+
+            }
+
+        }
+
         //Fun when Progress is Changed
         private void HttpDownloader_ProgressChanged(object sender, AltoHttp.ProgressChangedEventArgs e)
         {
@@ -49,6 +71,30 @@ namespace StudentProgramCsharp.user_control
 
         }
 
+        //Fun Delete file and change Database Status
+        private void DeleteFile(string path = null)
+        {
+            try
+            {
+                //Delet file from path
+                File.Delete(GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
+
+                Form1.Instance.Downloads_flowLayoutPanel.Controls.RemoveByKey(_name);
+
+                //change Status in ProgramsData Table to New
+                CDB readData = new CDB();
+                string cmd = "UPDATE ProgramsData SET Status = 'New' WHERE Name = " + String.Format("'{0}'", _name);
+                SqlCommand myCommand = new SqlCommand(cmd, readData._con());
+                readData.open();
+                myCommand.ExecuteNonQuery();
+                readData.close();
+            }
+            catch { MessageBox.Show(_name +" is still working"); }
+
+            
+
+
+        }
 
         //Fun for if Download is Completed
         private void HttpDownloader_DownloadCompleted(object sender, EventArgs e)
@@ -78,6 +124,52 @@ namespace StudentProgramCsharp.user_control
             });
         }
 
+        //Fun for checking if the Status in the database is Complete
+        private Boolean checkIfCompleted()
+        {
+            CDB readData = new CDB();
+
+
+            SqlDataReader dataReader;
+            String sql = "Select * From ProgramsData WHERE Name = " + String.Format("'{0}'", _name);
+            SqlCommand myCommand = new SqlCommand(sql, readData._con());
+            readData.open();
+            dataReader = myCommand.ExecuteReader();
+            dataReader.Read();
+
+
+
+            //checking Status in database if == Complete or not
+            if (dataReader["Status"].ToString() == "Complete")
+            {
+                readData.close();
+
+                lab_processing.Text = "Download Completed";
+                but_stop.Enabled = false;
+                but_Remove.Enabled = true;
+                but_Install.Enabled = true;
+                but_Remove.BringToFront();
+                lbspeed.Text = "";
+                progressBar1.Value = 100;
+                return true;
+            }
+            else
+            {
+                readData.close();
+                return false;
+            }
+
+        }
+
+        //Fun back ground install
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                Process.Start(GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
+            }
+            catch { }
+        }
 
         //get set
         #region Properties
@@ -145,29 +237,6 @@ namespace StudentProgramCsharp.user_control
         #endregion
 
 
-        //Fun for download fill from URL
-        private void start_Download()
-        {
-            try
-            {
-                Directory.CreateDirectory(GetDownloadFolderPath() + @"\Studen Program");
-                httpDownloader = new HttpDownloader(Url, GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
-                httpDownloader.DownloadCompleted += HttpDownloader_DownloadCompleted;
-                httpDownloader.ProgressChanged += HttpDownloader_ProgressChanged;
-                httpDownloader.Start();
-                lab_processing.Text = "Downloading....";
-            }
-            catch
-            {
-                lab_processing.Text = "Try Later....";
-
-            }
-
-        }
-
-
-
-
         //Button for Pause or Resume the Download
         private void but_stop_Click(object sender, EventArgs e)
         {
@@ -195,64 +264,40 @@ namespace StudentProgramCsharp.user_control
                 
         }
 
-        //Fun for checking if the Status in the database is Complete
-        private Boolean checkIfCompleted()
-        {
-            CDB readData = new CDB();
-
-
-            SqlDataReader dataReader;
-            String sql = "Select * From ProgramsData WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
-            SqlCommand myCommand = new SqlCommand(sql, readData._con());
-            readData.open();
-            dataReader = myCommand.ExecuteReader();
-            dataReader.Read();
-
-
-
-            //checking Status in database if == Complete or not
-            if (dataReader["Status"].ToString() == "Complete")
-            {
-                readData.close();
-                
-                lab_processing.Text = "Download Completed";
-                but_stop.Enabled = false;
-                but_Remove.Enabled = true;
-                but_Install.Enabled = true;
-                but_Remove.BringToFront();
-                lbspeed.Text = "";
-                progressBar1.Value = 100;
-                return true;
-            }
-            else
-            {
-                readData.close();
-                return false;
-            }
-
-        }
-
         //Button for installing the application
         private void but_Install_Click(object sender, EventArgs e)
         {
-            RunCMD install = new RunCMD();
-            install.cmd(GetDownloadFolderPath()+@"\Studen Program\" + Path.GetFileName(Url));
-            
+            if (backgroundWorker1.IsBusy)
+                MessageBox.Show("The installation is Running");
+            else
+                backgroundWorker1.RunWorkerAsync();
 
         }
 
-
+        //Button for deleting
         private void but_Remove_Click(object sender, EventArgs e)
-        {
-            Form1.Instance.Downloads_flowLayoutPanel.Controls.RemoveByKey(_name);
+        {   
+            //if Settings DontShow == false show message form
+            if (!Properties.Settings.Default.DontShow)
+            {   
+                MessageForm messageForm =  new MessageForm();
+                messageForm.message("Are you sure to delete this file " + _name);
+                messageForm.ShowDialog();
+                //if click ok delete file
+                if(messageForm._status)
+                {
+                    DeleteFile();   
+                }
 
-            //change Status in ProgramsData Table to New
-            CDB readData = new CDB();
-            string cmd = "UPDATE ProgramsData SET Status = 'New' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
-            SqlCommand myCommand = new SqlCommand(cmd, readData._con());
-            readData.open();
-            myCommand.ExecuteNonQuery();
-            readData.close();
+            }
+
+            //if Settings DontShow == true delete file
+            else if (Properties.Settings.Default.DontShow)
+            {
+                DeleteFile();
+
+            }
+
 
         }
     }
