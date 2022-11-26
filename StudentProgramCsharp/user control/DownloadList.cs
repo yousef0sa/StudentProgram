@@ -1,7 +1,6 @@
 ﻿using AltoHttp;
 using Microsoft.Win32;
 using StudentProgramCsharp.Class;
-using StudentProgramCsharp.Database;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,12 +14,16 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace StudentProgramCsharp.user_control
-{
+{   
     public partial class DownloadList : UserControl
     {
+        private DBOperations update = new DBOperations();
+        private Checking check = new Checking();
+
         public DownloadList()
         {
             InitializeComponent();
@@ -30,10 +33,8 @@ namespace StudentProgramCsharp.user_control
 
         private void DownloadList_Load(object sender, EventArgs e)
         {
-            //check if the Status in the database is Completed if not start Download
-            if (!checkIfCompleted())
-                start_Download();
-            panelController = Form1.Instance.Downloads_flowLayoutPanel.Controls.Count - 1;
+            //Start with Checking
+            Checking();
         }
 
 
@@ -76,20 +77,19 @@ namespace StudentProgramCsharp.user_control
         {
             try
             {
-                //Delet file from path
+                //Delete file from path
                 File.Delete(GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
 
-                Form1.Instance.Downloads_flowLayoutPanel.Controls.RemoveByKey(_name);
+                //remove from Download page
+                Form1.Instance.Downloads_flowLayoutPanel.Controls.RemoveByKey(ProgramName);
 
                 //change Status in ProgramsData Table to New
-                CDB readData = new CDB();
-                string cmd = "UPDATE ProgramsData SET Status = 'New' WHERE Name = " + String.Format("'{0}'", _name);
-                SqlCommand myCommand = new SqlCommand(cmd, readData._con());
-                readData.open();
-                myCommand.ExecuteNonQuery();
-                readData.close();
+                update.UpdataStatus("New", ProgramName);
             }
-            catch { MessageBox.Show(_name +" is still working"); }
+            catch 
+            { 
+                MessageBox.Show(ProgramName +" is still working"); 
+            }
 
             
 
@@ -108,42 +108,19 @@ namespace StudentProgramCsharp.user_control
                 but_Remove.BringToFront();
                 lbspeed.Text = "";
 
-
-
-
                 //change Status in ProgramsData Table to Complete
-                CDB readData = new CDB();
-                string cmd = "UPDATE ProgramsData SET Status = 'Complete' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _name);
-                SqlCommand myCommand = new SqlCommand(cmd, readData._con());
-                readData.open();
-                myCommand.ExecuteNonQuery();
-                readData.close();
-
+                update.UpdataStatus("Complete", ProgramName);
 
 
             });
         }
 
-        //Fun for checking if the Status in the database is Complete
-        private Boolean checkIfCompleted()
+        //Fun for Checking Download page
+        private void Checking()
         {
-            CDB readData = new CDB();
-
-
-            SqlDataReader dataReader;
-            String sql = "Select * From ProgramsData WHERE Name = " + String.Format("'{0}'", _name);
-            SqlCommand myCommand = new SqlCommand(sql, readData._con());
-            readData.open();
-            dataReader = myCommand.ExecuteReader();
-            dataReader.Read();
-
-
-
-            //checking Status in database if == Complete or not
-            if (dataReader["Status"].ToString() == "Complete")
+            //check if Download is Completed
+            if (check.DownloadCompleted(ProgramName))
             {
-                readData.close();
-
                 lab_processing.Text = "Download Completed";
                 but_stop.Enabled = false;
                 but_Remove.Enabled = true;
@@ -151,14 +128,9 @@ namespace StudentProgramCsharp.user_control
                 but_Remove.BringToFront();
                 lbspeed.Text = "";
                 progressBar1.Value = 100;
-                return true;
             }
             else
-            {
-                readData.close();
-                return false;
-            }
-
+                start_Download();
         }
 
         //Fun back ground install
@@ -169,6 +141,9 @@ namespace StudentProgramCsharp.user_control
                 Process.Start(GetDownloadFolderPath() + @"\Studen Program\" + Path.GetFileName(Url));
             }
             catch { }
+            {
+
+            }
         }
 
         //get set
@@ -177,7 +152,6 @@ namespace StudentProgramCsharp.user_control
         private string _name;
         private string _procssing;
         private string _url;
-        private int _controller;
         HttpDownloader httpDownloader;
 
         
@@ -225,17 +199,8 @@ namespace StudentProgramCsharp.user_control
             set { _url = value;}
         }
 
-        [Category("Custom Props")]
-        public int panelController
-        {
-            get { return _controller; }
-
-            set { _controller = value; }
-        }
-
 
         #endregion
-
 
         //Button for Pause or Resume the Download
         private void but_stop_Click(object sender, EventArgs e)
@@ -281,10 +246,11 @@ namespace StudentProgramCsharp.user_control
             if (!Properties.Settings.Default.DontShow)
             {   
                 MessageForm messageForm =  new MessageForm();
-                messageForm.message("Are you sure to delete this file " + _name);
+                messageForm.message("Are you sure to delete this file " + ProgramName);
                 messageForm.ShowDialog();
-                //if click ok delete file
-                if(messageForm._status)
+
+                //if OK is clicked delete file
+                if (messageForm.Status)
                 {
                     DeleteFile();   
                 }

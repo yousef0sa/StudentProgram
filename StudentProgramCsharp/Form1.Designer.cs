@@ -34,7 +34,7 @@ namespace StudentProgramCsharp
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.header = new System.Windows.Forms.Panel();
             this.tb_Search = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.User_Name = new System.Windows.Forms.Label();
             this.but_Settings = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.Info = new System.Windows.Forms.Panel();
@@ -91,7 +91,7 @@ namespace StudentProgramCsharp
             // 
             this.header.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.header.Controls.Add(this.tb_Search);
-            this.header.Controls.Add(this.label1);
+            this.header.Controls.Add(this.User_Name);
             this.header.Controls.Add(this.but_Settings);
             this.header.Controls.Add(this.pictureBox1);
             this.header.Dock = System.Windows.Forms.DockStyle.Top;
@@ -111,15 +111,15 @@ namespace StudentProgramCsharp
             this.tb_Search.TabIndex = 4;
             this.tb_Search.TextChanged += new System.EventHandler(this.tb_Search_TextChanged);
             // 
-            // label1
+            // User_Name
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Rockwell", 11F);
-            this.label1.Location = new System.Drawing.Point(55, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(85, 17);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "User Name";
+            this.User_Name.AutoSize = true;
+            this.User_Name.Font = new System.Drawing.Font("Rockwell", 11F);
+            this.User_Name.Location = new System.Drawing.Point(55, 12);
+            this.User_Name.Name = "User_Name";
+            this.User_Name.Size = new System.Drawing.Size(85, 17);
+            this.User_Name.TabIndex = 3;
+            this.User_Name.Text = "User Name";
             // 
             // but_Settings
             // 
@@ -164,36 +164,33 @@ namespace StudentProgramCsharp
             // 
             // lab_NumberOfDownloads
             // 
-            this.lab_NumberOfDownloads.AutoSize = true;
             this.lab_NumberOfDownloads.Dock = System.Windows.Forms.DockStyle.Left;
             this.lab_NumberOfDownloads.Font = new System.Drawing.Font("Rockwell", 10F);
-            this.lab_NumberOfDownloads.Location = new System.Drawing.Point(184, 0);
+            this.lab_NumberOfDownloads.Location = new System.Drawing.Point(220, 0);
             this.lab_NumberOfDownloads.Name = "lab_NumberOfDownloads";
-            this.lab_NumberOfDownloads.Size = new System.Drawing.Size(110, 17);
+            this.lab_NumberOfDownloads.Size = new System.Drawing.Size(110, 22);
             this.lab_NumberOfDownloads.TabIndex = 5;
             this.lab_NumberOfDownloads.Text = "Downloads:  0 |";
             // 
             // lab_NumberOFLibrary
             // 
-            this.lab_NumberOFLibrary.AutoSize = true;
             this.lab_NumberOFLibrary.Dock = System.Windows.Forms.DockStyle.Left;
             this.lab_NumberOFLibrary.Font = new System.Drawing.Font("Rockwell", 10F);
-            this.lab_NumberOFLibrary.Location = new System.Drawing.Point(78, 0);
+            this.lab_NumberOFLibrary.Location = new System.Drawing.Point(110, 0);
             this.lab_NumberOFLibrary.Name = "lab_NumberOFLibrary";
-            this.lab_NumberOFLibrary.Size = new System.Drawing.Size(106, 17);
+            this.lab_NumberOFLibrary.Size = new System.Drawing.Size(110, 22);
             this.lab_NumberOFLibrary.TabIndex = 6;
             this.lab_NumberOFLibrary.Text = "My Library: 0 |";
             // 
             // lab_numOFprograms
             // 
-            this.lab_numOFprograms.AutoSize = true;
             this.lab_numOFprograms.Dock = System.Windows.Forms.DockStyle.Left;
             this.lab_numOFprograms.Font = new System.Drawing.Font("Rockwell", 10F);
             this.lab_numOFprograms.Location = new System.Drawing.Point(0, 0);
             this.lab_numOFprograms.Name = "lab_numOFprograms";
-            this.lab_numOFprograms.Size = new System.Drawing.Size(78, 17);
+            this.lab_numOFprograms.Size = new System.Drawing.Size(110, 22);
             this.lab_numOFprograms.TabIndex = 7;
-            this.lab_numOFprograms.Text = "Programs: ";
+            this.lab_numOFprograms.Text = "Programs: 0 |";
             // 
             // nav
             // 
@@ -732,7 +729,6 @@ namespace StudentProgramCsharp
             this.header.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.Info.ResumeLayout(false);
-            this.Info.PerformLayout();
             this.nav.ResumeLayout(false);
             this.nav.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
@@ -747,14 +743,13 @@ namespace StudentProgramCsharp
 
         #endregion
         private System.Windows.Forms.Panel nav;
-        private System.Windows.Forms.FlowLayoutPanel Programs_flowLayoutPanel;
         private System.Windows.Forms.Panel content;
         private System.Windows.Forms.Button but_Settings;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         public System.Windows.Forms.FlowLayoutPanel Downloads_flowLayoutPanel;
         public System.Windows.Forms.Panel header;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label User_Name;
         private ContextMenuStrip settingsMenuForm;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripSeparator toolStripSeparator3;
@@ -778,7 +773,6 @@ namespace StudentProgramCsharp
         private Button but_Max_Min_Form;
         private Button but_ُExite;
         private Label label2;
-        private Panel Programs;
         private Guna.UI2.WinForms.Guna2Button guna2Button1;
         private Guna.UI2.WinForms.Guna2Button guna2Button8;
         private Guna.UI2.WinForms.Guna2Button guna2Button7;
@@ -790,6 +784,8 @@ namespace StudentProgramCsharp
         private Guna.UI2.WinForms.Guna2Button but_Programs;
         private Guna.UI2.WinForms.Guna2Button but_My_Library;
         private Guna.UI2.WinForms.Guna2Button but_Downloads;
+        public FlowLayoutPanel Programs_flowLayoutPanel;
+        private Panel Programs;
     }
 }
 

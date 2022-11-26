@@ -25,30 +25,6 @@ namespace StudentProgramCsharp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SettingUrl {
-            get {
-                return ((string)(this["SettingUrl"]));
-            }
-            set {
-                this["SettingUrl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SettingStatus {
-            get {
-                return ((string)(this["SettingStatus"]));
-            }
-            set {
-                this["SettingStatus"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool DontShow {
             get {
@@ -56,6 +32,18 @@ namespace StudentProgramCsharp.Properties {
             }
             set {
                 this["DontShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DownloadPath {
+            get {
+                return ((string)(this["DownloadPath"]));
+            }
+            set {
+                this["DownloadPath"] = value;
             }
         }
     }

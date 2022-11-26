@@ -18,19 +18,21 @@ namespace StudentProgramCsharp
         }
 
 
-        public bool _status = false;
 
+        private bool _status = false;
 
-        //change status to true
-        public void status_change()
+        //get set
+        public bool Status 
         {
-            _status = true;
+            get { return _status; }
+            set { _status = value; } 
         }
+
 
         //title name
         public void title(String title)
         { 
-            this.Text = title;
+            Text = title;
         }
         //message
         public void message(String message)
@@ -41,21 +43,21 @@ namespace StudentProgramCsharp
         //checkBox Checked Changed
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.DontShow = this.checkBox1.Checked;
+            Properties.Settings.Default.DontShow = checkBox1.Checked;
             Properties.Settings.Default.Save();
         }
 
-        //Ok
+        //OK Button
         private void Ok_Click(object sender, EventArgs e)
         {
-            status_change();
-            this.Close();
+            Status = true ;
+            Close();
         }
 
         //Cancel
         private void Cancel_Click_1(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

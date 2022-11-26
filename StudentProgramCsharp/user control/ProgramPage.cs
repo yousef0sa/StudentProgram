@@ -1,27 +1,19 @@
 ﻿using StudentProgramCsharp.Class;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Data.SqlClient;
-using StudentProgramCsharp.Database;
-using System.Net;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using Microsoft.SqlServer.Server;
-using StudentProgramCsharp.user_control;
-using System.Security.Policy;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace StudentProgramCsharp
 {
     public partial class ProgramPage : UserControl
     {
+        private DBOperations update = new DBOperations();
+        private TableReader tableReader = new TableReader();
+        private Checking check = new Checking();
+        private AddItems addItems = new AddItems();
+
         public ProgramPage()
         {
             InitializeComponent();
@@ -31,7 +23,7 @@ namespace StudentProgramCsharp
         }
 
         private void ProgramPage_Load(object sender, EventArgs e)
-        {   //checking data parameter 
+        {   //Start with checking 
             checking();
 
             //resize label
@@ -62,7 +54,6 @@ namespace StudentProgramCsharp
             set
             {
                 _title = value; lblTitle.Text = value;
-
             }
         }
 
@@ -91,87 +82,48 @@ namespace StudentProgramCsharp
         //Fun for resize label
         private void resize()
         {
-            int x = (this.Width / 2) - (lblTitle.Width / 2);
+            int x = (Width / 2) - (lblTitle.Width / 2);
             lblTitle.Left = x;
 
         }
 
-        //Fun for checking data parameter 
+        //Fun for checking is the program have Url and checks if New  
         private void checking()
         {
-            CDB readData = new CDB();
-
-            SqlDataReader dataReader;
-            String sql = "Select * From ProgramsData WHERE CONVERT(varchar,Name) = " + String.Format("'{0}'", _title);
-            SqlCommand myCommand = new SqlCommand(sql, readData._con());
-            readData.open();
-            dataReader = myCommand.ExecuteReader();
-            dataReader.Read();
-
-            if (dataReader["Url"].ToString() == "")
+            if (check.CheckColumnValue("Url", "", Title))
             {
                 button1.Enabled = false;
             }
             else
             {
-                if (dataReader["Status"].ToString() == "New")
+                if (check.CheckColumnValue("Status", "New", Title))
                     button1.Enabled = true;
                 else button1.Enabled = false;
             }
-            readData.close();
-
         }
 
         //Button to Download
         private void button1_Click(object sender, EventArgs e)
         {
-            CDB readData = new CDB();
-
             //change Status in ProgramsData Table to Listed 
-            string cmd = "UPDATE ProgramsData SET Status = 'Listed' WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _title);
-            SqlCommand myCommand = new SqlCommand(cmd, readData._con());
-            readData.open();
-            myCommand.ExecuteNonQuery();
-            readData.close();
+            update.UpdataStatus("Listed", Title);
 
+            //Return ExecuteReader When Name == Title
+            var reader = tableReader.ReadByName(Title);
 
-            //add to Downloads
-            SqlDataReader dataReader;
-            String sql = "Select * From ProgramsData WHERE CONVERT(VARCHAR,Name) = " + String.Format("'{0}'", _title);
-            myCommand = new SqlCommand(sql, readData._con());
-            readData.open();
-            dataReader = myCommand.ExecuteReader();
-            DownloadList listItems = new DownloadList();
-            dataReader.Read();
-
-            listItems.Name = dataReader["Name"].ToString();
-            listItems.ProgramName = dataReader["Name"].ToString();
-            listItems.Url = dataReader["Url"].ToString();
-
-
-            if (Form1.Instance.Downloads_flowLayoutPanel.Controls.Count < 0)
-            {
-                Form1.Instance.Downloads_flowLayoutPanel.Controls.Clear();
-            }
-            else
-                Form1.Instance.Downloads_flowLayoutPanel.Controls.Add(listItems);
-
-            readData.close();
+            //Add to Download page
+            addItems.DownloadList(reader);
 
             button1.Enabled = false;
-
-
         }
 
         //Browse the program's website
         private void lblTitle_Click(object sender, EventArgs e)
         {
-            if (_browse != "")
+            if (Browse != "")
             {
-                Process.Start(_browse);
+                Process.Start(Browse);
             }
-
-
         }
 
     }
