@@ -10,18 +10,16 @@ The project is not yet complete and lacks some basic features.
 
 Download: [Here](https://github.com/yousef0sa/StudentProgramCsharp/releases)
 
-## What's new in version 0.2
--Add Title bar.
+## What's new in version 0.3
+-Add Splash Screen
 
--Add a menu on the settings button.
+-Faster closing
 
--Create a Search bar.
+-Remove the install file
 
--Add filter bar.
+-Deletion confirmation message
 
--Add new labels on the main form to count how many items at each page.
-
--Add new data.
+-Browse the program's website
 
 
 ## Features that have not completed yet
